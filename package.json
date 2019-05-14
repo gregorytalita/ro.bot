@@ -1,0 +1,17 @@
+{
+  "name": "robot-bot",
+  "version": "1.0.0",
+  "description": "A Bot to make team mates lifes more easier and happier ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "bot"
+  ],
+  "author": "Talita Gregory",
+  "license": "ISC",
+  "dependencies": {
+    "slackbots": "^1.2.0"
+  }
+}
