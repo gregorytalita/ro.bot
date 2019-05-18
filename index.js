@@ -1,6 +1,7 @@
-const SlackBot = require('slackbots')
+const SlackBot = require('slackbots') 
+const Brain = require('./brain')
+
 require('dotenv').config()
-const dataset = require('./conversation.json')
 
 const BOT_TOKEN = process.env.BOT_TOKEN
 
@@ -10,48 +11,21 @@ const bot = new SlackBot({
     name: 'Ro.bot'
 })
 
+const robot = new Brain()
+
 bot.on('start', () => {
-    bot.postMessageToChannel('general', 'I`m aliveee')
+    bot.postMessageToChannel('general', robot.enableGeneration(), {icon_emoji: ':robot_face:'})
 })
 
 bot.on("message", msg => {
   switch (msg.type) {
   case "message":
     if (msg.channel[0] === "D" && msg.bot_id === undefined) {
-        bot.postMessage(msg.user, bestAnswer(msg.text), { as_user: true })
+        robot.sendChat(msg.text)
+        .then(answer => {
+            bot.postMessage(msg.user, answer, { as_user: true })
+        })
     }
     break
   }
 })
-
-const bestAnswer = (message) => {
-    const words = message.split(' ').map(word => word.toLowerCase())
-    let highestMatches = 0
-    let matches = 0
-    let closestMessage = ''
-
-    const closestConversation = dataset.conversations.filter((conversation, id) => {
-        const formatedConversation = conversation.map(phrase => phrase.toLowerCase())
-        formatedConversation.map((phrase, i) => {
-            const phraseWords = phrase.split(' ')
-            words.forEach( word => {
-                if(phraseWords.includes(word)){
-                    matches++
-                }
-            })
-            if(matches > highestMatches) {
-                highestMatches = matches
-                closestMessage = phrase
-            }
-            matches = 0
-        })
-
-        return formatedConversation.includes(closestMessage)
-    })
-
-    const answer = closestConversation[0][closestConversation[0].indexOf(closestMessage) + 1]
-    if(!answer) {
-        return 'I never took so far in a conversation... idk what to answer'
-    }
-    return answer
-}

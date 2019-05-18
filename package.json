@@ -12,6 +12,8 @@
   "author": "Talita Gregory",
   "license": "ISC",
   "dependencies": {
+    "@tensorflow/tfjs": "^1.1.2",
+    "@tensorflow/tfjs-node": "^1.1.2",
     "dotenv": "^8.0.0",
     "slackbots": "^1.2.0"
   }
