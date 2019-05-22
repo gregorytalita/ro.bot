@@ -13,11 +13,9 @@ const encoderModel = tfn.io.fileSystem('./encoder-model/model.json')
 module.exports = class Brain {
 
     constructor() {
-        this.temperature = 0
-  
         Promise.all([
             tf.loadLayersModel(decoderModel),
-            tf.loadLayersModel(encoderModel),
+            tf.loadLayersModel(encoderModel)
         ]).then(([decoder, encoder]) => {
             this.decoder = decoder
             this.encoder = encoder
@@ -32,6 +30,7 @@ module.exports = class Brain {
     async sendChat(inputText) {
         const states = tf.tidy(() => {
             const input = this.convertSentenceToTensor(inputText)
+            console.log('enconder!!!!!', this.encoder )
             return this.encoder.predict(input)
         })
         
@@ -112,26 +111,4 @@ module.exports = class Brain {
         return tokens.join(' ')
     }
   
-    applyOutputRegex(text) {
-        text = text.replace(/i 'm/g, "I'm")
-        text = text.replace(/he 's/g, "he's")
-        text = text.replace(/do n't/g, "don't")
-        text = text.replace(/(:+\s?)+d/g, ":D")
-        text = text.replace(/(\s?)+'/g, "'")
-        text = text.replace(/i /g, "I ")
-        text = text.replace(/(\s?)+,/g, ",")
-        text = text.replace(/\s([?.!"](?:\s|$))/g, "$1")
-        text = text.replace(/(:+\s?)+\)/g, ":)")
-        text = text.replace(/(+\s?)+\)/g, ")")
-        text = text.replace(/can ’ t/g, "can't")
-        text = text.replace(/"ca n’t/g, "can't")
-        text = text.replace(/ca n't/g, "can't")
-        text = text.replace(/\( /g, "(")
-        text = text.replace(/ \)/g, ")")
-        text = text.replace(/i'd/g, "I'd")
-        text = text.replace(/`` /g, "")
-        text = text.replace(/''/g, "")
-        text = text.replace(/ ``/g, "")
-        return text
-    }
 }
