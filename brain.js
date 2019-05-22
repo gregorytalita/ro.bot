@@ -30,7 +30,6 @@ module.exports = class Brain {
     async sendChat(inputText) {
         const states = tf.tidy(() => {
             const input = this.convertSentenceToTensor(inputText)
-            console.log('enconder!!!!!', this.encoder )
             return this.encoder.predict(input)
         })
         

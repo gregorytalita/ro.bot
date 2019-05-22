@@ -1,9 +1,17 @@
+require('dotenv').config()
 const SlackBot = require('slackbots') 
 const Brain = require('./brain')
+const express = require('express')
+const path = require('path')
 
-require('dotenv').config()
-
+const PORT = process.env.PORT || 5000
 const BOT_TOKEN = process.env.BOT_TOKEN
+
+express()
+  .use(express.static(path.join(__dirname, 'public')))
+  .get('/', (req, res) => res.json({ success: true }))
+  .listen(PORT, () => console.log(`Listening on ${ PORT }`))
+
 
 const bot = new SlackBot({
     json_file_store: './db_slackbutton_slash_command/',
