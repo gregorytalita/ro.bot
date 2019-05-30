@@ -28,11 +28,11 @@ module.exports = class Brain {
     }
   
     async sendChat(inputText) {
+        console.log(inputText)
         const states = tf.tidy(() => {
             const input = this.convertSentenceToTensor(inputText)
             return this.encoder.predict(input)
         })
-        
         this.decoder.layers[1].resetStates(states)
     
         let responseTokens = []
@@ -86,11 +86,11 @@ module.exports = class Brain {
   
     convertSentenceToTensor(sentence) {
         let inputWordIds = []
-        token.tokenizer(sentence).map((x) => {
-            x = x.toLowerCase()
+        token.tokenizer(sentence).map((word) => {
+            word = word.toLowerCase()
             let idx = '1'
-            if (x in inputWord) {
-                idx = inputWord[x]
+            if (word in inputWord) {
+                idx = inputWord[word]
             }
             inputWordIds.push(Number(idx))
         })
